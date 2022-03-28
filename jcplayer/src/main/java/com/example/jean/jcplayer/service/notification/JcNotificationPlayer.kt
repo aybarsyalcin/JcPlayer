@@ -123,7 +123,7 @@ class JcNotificationPlayer private constructor(private val context: Context) : J
         val playIntent = Intent(context.applicationContext, JcPlayerNotificationReceiver::class.java)
         playIntent.putExtra(ACTION, action)
 
-        return PendingIntent.getBroadcast(context.applicationContext, id, playIntent, PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getBroadcast(context.applicationContext, id, playIntent, PendingIntent.FLAG_MUTABLE)
     }
 
     override fun onPreparedAudio(status: JcStatus) {
