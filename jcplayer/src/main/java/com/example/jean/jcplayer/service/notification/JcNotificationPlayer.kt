@@ -76,7 +76,7 @@ class JcNotificationPlayer private constructor(private val context: Context) : J
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContent(createNotificationPlayerView())
                 .setSound(null)
-                .setContentIntent(PendingIntent.getActivity(context, NOTIFICATION_ID, openUi, PendingIntent.FLAG_CANCEL_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(context, NOTIFICATION_ID, openUi, PendingIntent.FLAG_MUTABLE))
                 .setAutoCancel(false)
                 .build()
 
