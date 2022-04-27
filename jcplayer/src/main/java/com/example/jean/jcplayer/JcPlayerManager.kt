@@ -12,6 +12,7 @@ import com.example.jean.jcplayer.service.notification.JcNotificationPlayer
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.jvm.Throws
 
 /**
  * This class is the player manager. Handles all interactions and communicates with [JcPlayerService].

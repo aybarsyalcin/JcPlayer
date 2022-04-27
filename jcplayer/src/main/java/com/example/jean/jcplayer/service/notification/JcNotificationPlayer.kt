@@ -12,13 +12,16 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC
 import android.support.v4.app.NotificationManagerCompat
+import android.util.Log
 import android.widget.RemoteViews
 import com.example.jean.jcplayer.JcPlayerManager
 import com.example.jean.jcplayer.JcPlayerManagerListener
 import com.example.jean.jcplayer.R
 import com.example.jean.jcplayer.general.JcStatus
 import com.example.jean.jcplayer.general.PlayerUtil
+import java.lang.Exception
 import java.lang.ref.WeakReference
+import kotlin.math.log
 
 /**
  * This class is a Android [Service] that handles notification changes on background.
@@ -65,12 +68,14 @@ class JcNotificationPlayer private constructor(private val context: Context) : J
     }
 
     fun createNotificationPlayer(title: String?, iconResourceResource: Int) {
-        this.title = title
-        this.iconResource = iconResourceResource
-        val openUi = Intent(context, context.javaClass)
-        openUi.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
 
-        notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
+        try {
+            this.title = title
+            this.iconResource = iconResourceResource
+            val openUi = Intent(context, context.javaClass)
+            openUi.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+            notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
                 .setSmallIcon(iconResourceResource)
                 .setLargeIcon(BitmapFactory.decodeResource(context.resources, iconResourceResource))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -80,19 +85,23 @@ class JcNotificationPlayer private constructor(private val context: Context) : J
                 .setAutoCancel(false)
                 .build()
 
-        @RequiresApi(Build.VERSION_CODES.O)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL, NotificationManager.IMPORTANCE_LOW)
-            channel.lockscreenVisibility = VISIBILITY_PUBLIC
-            channel.enableLights(false)
-            channel.enableVibration(false)
-            channel.setSound(null, null)
+            @RequiresApi(Build.VERSION_CODES.O)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL, NotificationManager.IMPORTANCE_LOW)
+                channel.lockscreenVisibility = VISIBILITY_PUBLIC
+                channel.enableLights(false)
+                channel.enableVibration(false)
+                channel.setSound(null, null)
 
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+                val notificationManager = context.getSystemService(NotificationManager::class.java)
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            notification?.let { notificationManager.notify(NOTIFICATION_ID, it) }
+        } catch (e: Exception) {
+
         }
 
-        notification?.let { notificationManager.notify(NOTIFICATION_ID, it) }
     }
 
     fun updateNotification() {
